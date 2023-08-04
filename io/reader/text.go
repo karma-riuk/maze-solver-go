@@ -82,7 +82,6 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 	for x, rune := range line {
 		char := byte(rune)
 		if char == r.PathChar {
-			fmt.Printf("last line number: %v\n", y)
 			coords := maze.Coordinates{X: x, Y: y}
 			node := maze.NewNode(coords)
 			r.lookupNeighbourAbove(&lines, node, &nodesByCoord)
@@ -117,7 +116,6 @@ func (r *TextReader) lookupNeighbourLeft(line *string, node *maze.Node, nodesByC
 		neighbour, ok := (*nodesByCoord)[maze.Coordinates{X: x, Y: node.Coords.Y}]
 		if ok {
 			node.Left = neighbour
-			fmt.Printf("Setting left of %v to %v\n", node.Coords, neighbour.Coords)
 			neighbour.Right = node
 			break
 		}
