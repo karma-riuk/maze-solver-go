@@ -67,7 +67,7 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 				ret.Nodes = append(ret.Nodes, node)
 				nodesByCoord[coords] = node
 
-				r.lookupNeighbourAbove(&lines, node, &nodesByCoord)
+				r.lookupNeighbourAbove(&lines, node, &nodesByCoord, ret)
 				if left_char == r.PathChar && right_char == r.WallChar ||
 					above_char == r.PathChar && (left_char == r.PathChar || right_char == r.PathChar) {
 					r.lookupNeighbourLeft(&line, node, &nodesByCoord)
@@ -84,7 +84,7 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 		if char == r.PathChar {
 			coords := maze.Coordinates{X: x, Y: y}
 			node := maze.NewNode(coords)
-			r.lookupNeighbourAbove(&lines, node, &nodesByCoord)
+			r.lookupNeighbourAbove(&lines, node, &nodesByCoord, ret)
 			ret.Nodes = append(ret.Nodes, node)
 			break
 		}
@@ -93,17 +93,33 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 	return ret, nil
 }
 
-func (r *TextReader) lookupNeighbourAbove(lines *[]string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
+func (r *TextReader) lookupNeighbourAbove(lines *[]string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node, m *maze.Maze) {
 	for y := node.Coords.Y - 1; y >= 0; y-- {
-		if (*lines)[y][node.Coords.X] == r.WallChar {
-			break
-		}
-
 		neighbour, ok := (*nodesByCoord)[maze.Coordinates{X: node.Coords.X, Y: y}]
+
 		if ok {
 			node.Up = neighbour
 			neighbour.Down = node
+			break
 		}
+
+		if y > 0 && (*lines)[y][node.Coords.X] == r.WallChar {
+			y++
+			if y == node.Coords.Y {
+				break
+			}
+			coords := maze.Coordinates{X: node.Coords.X, Y: y}
+			new_node := maze.NewNode(coords)
+			r.lookupNeighbourLeft(&(*lines)[y], new_node, nodesByCoord)
+			r.lookupNeighbourRight(&(*lines)[y], new_node, nodesByCoord)
+			(*nodesByCoord)[coords] = new_node
+			m.Nodes = append(m.Nodes, new_node)
+
+			node.Up = new_node
+			new_node.Down = node
+			break
+		}
+
 	}
 }
 
@@ -117,6 +133,21 @@ func (r *TextReader) lookupNeighbourLeft(line *string, node *maze.Node, nodesByC
 		if ok {
 			node.Left = neighbour
 			neighbour.Right = node
+			break
+		}
+	}
+}
+
+func (r *TextReader) lookupNeighbourRight(line *string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
+	for x := node.Coords.X + 1; x < len(*line); x++ {
+		if (*line)[x] == r.WallChar {
+			panic(fmt.Sprintf("Found no node before wall while looking to the right at neighbours of node %v", node))
+		}
+
+		neighbour, ok := (*nodesByCoord)[maze.Coordinates{X: x, Y: node.Coords.Y}]
+		if ok {
+			node.Right = neighbour
+			neighbour.Left = node
 			break
 		}
 	}
