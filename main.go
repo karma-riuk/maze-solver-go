@@ -11,7 +11,7 @@ func main() {
 	input := "filename"
 	output := "filename"
 
-	reader := &reader.ImageReader{}
+	reader := &reader.TextReader{PathChar: ' ', WallChar: '#'}
 	writer := &writer.ImageWriter{}
 
 	solver := &solver.Bfs{}
