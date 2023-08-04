@@ -1,10 +1,30 @@
 package maze
 
-type Maze interface {
-	maze()
+type Coordinates struct {
+	X, Y int
+}
+type Node struct {
+	Coords      Coordinates
+	Up, Down    *Node
+	Left, Right *Node
 }
 
-type SolvedMaze interface {
+func NewNode(coords Coordinates) *Node {
+	return &Node{
+		Coords: coords,
+		Up:     nil,
+		Down:   nil,
+		Left:   nil,
+		Right:  nil,
+	}
+}
+
+type Maze struct {
+	Width, Height uint
+	Nodes         []*Node
+}
+
+type SolvedMaze struct {
 	Maze
-	solvedMaze()
+	Solution []*Node
 }
