@@ -131,6 +131,78 @@ func TestTextReadTrivialBigger(t *testing.T) {
 	}
 }
 
+func TestTextReadTrivialBiggerStaggered(t *testing.T) {
+	/* trivial-bigger-staggered.txt
+	   ### ###
+	   ### ###
+	   #     #
+	   #### ##
+	   #### ##
+
+	   Nodes are
+	   ###0###
+	   ### ###
+	   #1 243#
+	   #### ##
+	   ####5##
+	*/
+	fmt.Println("---------- STAGGERED ----------")
+	nodes := make([]*maze.Node, 6)
+
+	nodes[0] = maze.NewNode(maze.Coordinates{X: 3, Y: 0})
+
+	nodes[1] = maze.NewNode(maze.Coordinates{X: 1, Y: 2})
+	nodes[2] = maze.NewNode(maze.Coordinates{X: 3, Y: 2})
+	nodes[3] = maze.NewNode(maze.Coordinates{X: 5, Y: 2})
+
+	nodes[4] = maze.NewNode(maze.Coordinates{X: 4, Y: 2})
+
+	nodes[5] = maze.NewNode(maze.Coordinates{X: 4, Y: 4})
+
+	nodes[0].Down = nodes[2]
+
+	nodes[1].Right = nodes[2]
+
+	nodes[2].Up = nodes[0]
+	nodes[2].Left = nodes[1]
+	nodes[2].Right = nodes[4]
+
+	nodes[3].Left = nodes[4]
+
+	nodes[4].Down = nodes[5]
+	nodes[4].Left = nodes[2]
+	nodes[4].Right = nodes[3]
+
+	nodes[5].Up = nodes[4]
+
+	reader := TextReader{
+		PathChar: ' ',
+		WallChar: '#',
+	}
+
+	filename := "../../assets/trivial-bigger-staggered.txt"
+	got, err := reader.Read(filename)
+	utils.Check(err, "Couldn't create maze from %q", filename)
+
+	if len(nodes) != len(got.Nodes) {
+		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
+	}
+
+	for _, node := range got.Nodes {
+		fmt.Println(node)
+	}
+
+	for i, got := range got.Nodes {
+		expected := nodes[i]
+
+		checkNode(t, i, got, expected, "")
+		checkNode(t, i, got.Left, expected.Left, "left")
+		checkNode(t, i, got.Right, expected.Right, "Right")
+		checkNode(t, i, got.Up, expected.Up, "Up")
+		checkNode(t, i, got.Down, expected.Down, "Down")
+	}
+}
+
 func checkNode(t *testing.T, i int, got *maze.Node, expected *maze.Node, side string) {
 	if expected == nil {
 		return
