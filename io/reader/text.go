@@ -26,18 +26,19 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 		return nil, err
 	}
 
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
+	{
+		scanner := bufio.NewScanner(file)
+		scanner.Split(bufio.ScanLines)
 
-	y := 0
-	var line string
-	for scanner.Scan() {
-		line = scanner.Text()
-
-		if len(lines) == 0 {
-			lines = make([]string, 0, len(line))
+		for scanner.Scan() {
+			line := scanner.Text()
+			lines = append(lines, line)
 		}
+		file.Close()
+	}
 
+	for y, line := range lines {
+		fmt.Println(line)
 		for x := 1; x < len(line)-1; x++ {
 			char := line[x]
 			var left_char, right_char, above_char byte
@@ -76,15 +77,14 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 				}
 			}
 		}
-		lines = append(lines, line)
-		y++
 	}
-	y--
+
+	fmt.Println(len(lines))
 	// Parse last line to get exit
-	for x, rune := range line {
+	for x, rune := range lines[len(lines)-1] {
 		char := byte(rune)
 		if char == r.PathChar {
-			coords := maze.Coordinates{X: x, Y: y}
+			coords := maze.Coordinates{X: x, Y: len(lines) - 1}
 			node := maze.NewNode(coords)
 			r.lookupNeighbourAbove(&lines, node, &nodesByCoord, ret)
 			ret.Nodes = append(ret.Nodes, node)
