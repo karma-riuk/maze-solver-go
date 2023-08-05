@@ -6,11 +6,6 @@ import (
 	"maze-solver/maze"
 )
 
-const (
-	WallChar = '#'
-	PathChar = ' '
-)
-
 func Parse(reader reader.Reader) (*maze.Maze, error) {
 	nodesByCoord := make(map[maze.Coordinates]*maze.Node)
 	ret := &maze.Maze{}
@@ -20,55 +15,47 @@ func Parse(reader reader.Reader) (*maze.Maze, error) {
 		return nil, err
 	}
 
-	for y, line := range raw_maze.Data {
-		fmt.Println(line)
-		for x := 1; x < len(line)-1; x++ {
-			char := line[x]
-			var left_char, right_char, above_char byte
+	y := 0
+	// Parse first line to get entrance
+	for x := 0; x < raw_maze.Width-1; x++ {
+		if raw_maze.IsPath(x, y) {
+			coords := maze.Coordinates{X: x, Y: y}
+			node := maze.NewNode(coords)
+			ret.Nodes = append(ret.Nodes, node)
+			nodesByCoord[coords] = node
+			break
+		}
+	}
 
-			if y > 0 {
-				left_char = line[x-1]
-				right_char = line[x+1]
-				above_char = raw_maze.Data[y-1][x]
-			}
-
-			// Parse first line to get entrance
-			if y == 0 && char == PathChar {
-				coords := maze.Coordinates{X: x, Y: y}
-				node := maze.NewNode(coords)
-				ret.Nodes = append(ret.Nodes, node)
-				nodesByCoord[coords] = node
-				continue
-			}
-
+	for y = 1; y < raw_maze.Height-1; y++ {
+		for x := 1; x < raw_maze.Width-1; x++ {
 			// Parse middle of the maze
-			if y > 0 && char == PathChar &&
-				(left_char == WallChar && right_char == PathChar ||
-					left_char == PathChar && right_char == WallChar ||
-					above_char == PathChar && (left_char == PathChar || right_char == PathChar)) {
+			if raw_maze.IsPath(x, y) &&
+				(raw_maze.IsWall(x-1, y) && raw_maze.IsPath(x+1, y) ||
+					raw_maze.IsPath(x-1, y) && raw_maze.IsWall(x+1, y) ||
+					raw_maze.IsPath(x, y-1) && (raw_maze.IsPath(x-1, y) || raw_maze.IsPath(x+1, y))) {
 				coords := maze.Coordinates{X: x, Y: y}
 				node := maze.NewNode(coords)
 
-				lookupNeighbourAbove(&raw_maze.Data, node, &nodesByCoord, ret)
+				lookupNeighbourAbove(raw_maze, node, &nodesByCoord, ret)
 
 				ret.Nodes = append(ret.Nodes, node)
 				nodesByCoord[coords] = node
 
-				if left_char == PathChar && right_char == WallChar ||
-					above_char == PathChar && (left_char == PathChar || right_char == PathChar) {
-					lookupNeighbourLeft(&line, node, &nodesByCoord)
+				if raw_maze.IsPath(x-1, y) && raw_maze.IsWall(x+1, y) ||
+					raw_maze.IsPath(x, y-1) && (raw_maze.IsPath(x-1, y) || raw_maze.IsPath(x+1, y)) {
+					lookupNeighbourLeft(raw_maze, node, &nodesByCoord)
 				}
 			}
 		}
 	}
 
 	// Parse last line to get exit
-	for x, rune := range raw_maze.Data[len(raw_maze.Data)-1] {
-		char := byte(rune)
-		if char == PathChar {
-			coords := maze.Coordinates{X: x, Y: len(raw_maze.Data) - 1}
+	for x := 0; x < raw_maze.Width-1; x++ {
+		if raw_maze.IsPath(x, y) {
+			coords := maze.Coordinates{X: x, Y: y}
 			node := maze.NewNode(coords)
-			lookupNeighbourAbove(&raw_maze.Data, node, &nodesByCoord, ret)
+			lookupNeighbourAbove(raw_maze, node, &nodesByCoord, ret)
 			ret.Nodes = append(ret.Nodes, node)
 			break
 		}
@@ -77,7 +64,7 @@ func Parse(reader reader.Reader) (*maze.Maze, error) {
 	return ret, nil
 }
 
-func lookupNeighbourAbove(Data *[]string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node, m *maze.Maze) {
+func lookupNeighbourAbove(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node, m *maze.Maze) {
 	for y := node.Coords.Y - 1; y >= 0; y-- {
 		neighbour, ok := (*nodesByCoord)[maze.Coordinates{X: node.Coords.X, Y: y}]
 
@@ -87,15 +74,15 @@ func lookupNeighbourAbove(Data *[]string, node *maze.Node, nodesByCoord *map[maz
 			break
 		}
 
-		if y > 0 && (*Data)[y][node.Coords.X] == WallChar {
+		if y > 0 && raw_maze.IsWall(node.Coords.X, y) {
 			y++
 			if y == node.Coords.Y {
 				break
 			}
 			coords := maze.Coordinates{X: node.Coords.X, Y: y}
 			new_node := maze.NewNode(coords)
-			lookupNeighbourLeft(&(*Data)[y], new_node, nodesByCoord)
-			lookupNeighbourRight(&(*Data)[y], new_node, nodesByCoord)
+			lookupNeighbourLeft(raw_maze, new_node, nodesByCoord)
+			lookupNeighbourRight(raw_maze, new_node, nodesByCoord)
 			(*nodesByCoord)[coords] = new_node
 			m.Nodes = append(m.Nodes, new_node)
 
@@ -107,9 +94,9 @@ func lookupNeighbourAbove(Data *[]string, node *maze.Node, nodesByCoord *map[maz
 	}
 }
 
-func lookupNeighbourLeft(line *string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
+func lookupNeighbourLeft(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
 	for x := node.Coords.X - 1; x > 0; x-- {
-		if (*line)[x] == WallChar && x < node.Coords.X-1 {
+		if raw_maze.IsWall(x, node.Coords.Y) && x < node.Coords.X-1 {
 			panic(fmt.Sprintf("Found no node before wall while looking to the left at neighbours of node %v", node))
 		}
 
@@ -122,9 +109,9 @@ func lookupNeighbourLeft(line *string, node *maze.Node, nodesByCoord *map[maze.C
 	}
 }
 
-func lookupNeighbourRight(line *string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
-	for x := node.Coords.X + 1; x < len(*line); x++ {
-		if (*line)[x] == WallChar {
+func lookupNeighbourRight(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
+	for x := node.Coords.X + 1; x < raw_maze.Width; x++ {
+		if raw_maze.IsWall(x, node.Coords.Y) {
 			panic(fmt.Sprintf("Found no node before wall while looking to the right at neighbours of node %v", node))
 		}
 
