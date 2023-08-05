@@ -12,27 +12,37 @@ type TextReader struct {
 }
 
 func (r TextReader) Read() (*maze.RawMaze, error) {
-	var lines []string
-
-	if _, err := os.Stat(r.Filename); err != nil {
-		return nil, err
-	}
-
-	file, err := os.Open(r.Filename)
+	lines, err := getLines(r.Filename)
 	if err != nil {
 		return nil, err
 	}
 
-	{
-		scanner := bufio.NewScanner(file)
-		scanner.Split(bufio.ScanLines)
+	return &maze.RawMaze{
+		PathChar: r.PathChar,
+		WallChar: r.WallChar,
+		Data:     *lines,
+	}, nil
+}
 
-		for scanner.Scan() {
-			line := scanner.Text()
-			lines = append(lines, line)
-		}
-		file.Close()
+func getLines(filename string) (*[]string, error) {
+	var lines []string
+	if _, err := os.Stat(filename); err != nil {
+		return nil, err
 	}
 
-	return &maze.RawMaze{PathChar: r.PathChar, WallChar: r.WallChar, Data: lines}, nil
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		lines = append(lines, line)
+	}
+
+	return &lines, nil
 }
