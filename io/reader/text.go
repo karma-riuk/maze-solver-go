@@ -2,7 +2,6 @@ package reader
 
 import (
 	"bufio"
-	"maze-solver/maze"
 	"os"
 )
 
@@ -11,7 +10,7 @@ type TextReader struct {
 	PathChar, WallChar byte
 }
 
-func (r TextReader) Read() (*maze.RawMaze, error) {
+func (r TextReader) Read() (*RawMaze, error) {
 	lines, err := getLines(r.Filename)
 	if err != nil {
 		return nil, err

@@ -1,4 +1,4 @@
-package maze
+package reader
 
 import (
 	"strings"

@@ -64,7 +64,7 @@ func Parse(reader reader.Reader) (*maze.Maze, error) {
 	return ret, nil
 }
 
-func lookupNeighbourAbove(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node, m *maze.Maze) {
+func lookupNeighbourAbove(raw_maze *reader.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node, m *maze.Maze) {
 	for y := node.Coords.Y - 1; y >= 0; y-- {
 		neighbour, ok := (*nodesByCoord)[maze.Coordinates{X: node.Coords.X, Y: y}]
 
@@ -94,7 +94,7 @@ func lookupNeighbourAbove(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord 
 	}
 }
 
-func lookupNeighbourLeft(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
+func lookupNeighbourLeft(raw_maze *reader.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
 	for x := node.Coords.X - 1; x > 0; x-- {
 		if raw_maze.IsWall(x, node.Coords.Y) && x < node.Coords.X-1 {
 			panic(fmt.Sprintf("Found no node before wall while looking to the left at neighbours of node %v", node))
@@ -109,7 +109,7 @@ func lookupNeighbourLeft(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *
 	}
 }
 
-func lookupNeighbourRight(raw_maze *maze.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
+func lookupNeighbourRight(raw_maze *reader.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
 	for x := node.Coords.X + 1; x < raw_maze.Width; x++ {
 		if raw_maze.IsWall(x, node.Coords.Y) {
 			panic(fmt.Sprintf("Found no node before wall while looking to the right at neighbours of node %v", node))
