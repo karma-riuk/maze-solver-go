@@ -19,6 +19,11 @@ func NewNode(coords Coordinates) *Node {
 	}
 }
 
+type RawMaze struct {
+	PathChar, WallChar byte
+	Data               []string
+}
+
 type Maze struct {
 	Width, Height uint
 	Nodes         []*Node
