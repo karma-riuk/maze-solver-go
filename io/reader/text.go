@@ -17,11 +17,13 @@ func (r TextReader) Read() (*maze.RawMaze, error) {
 		return nil, err
 	}
 
-	return &maze.RawMaze{
+	strings_reader := StringsReader{
 		PathChar: r.PathChar,
 		WallChar: r.WallChar,
-		Data:     *lines,
-	}, nil
+		Lines:    lines,
+	}
+
+	return strings_reader.Read()
 }
 
 func getLines(filename string) (*[]string, error) {
