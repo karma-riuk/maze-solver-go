@@ -26,3 +26,11 @@ func (m *RawMaze) String() string {
 
 	return ret.String()
 }
+
+func (m *RawMaze) isPath(x int, y int) bool {
+	return m.Data[y][x] == m.PathChar
+}
+
+func (m *RawMaze) isWall(x int, y int) bool {
+	return m.Data[y][x] == m.WallChar
+}
