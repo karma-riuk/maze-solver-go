@@ -64,10 +64,12 @@ func (r *TextReader) Read(filename string) (*maze.Maze, error) {
 					above_char == r.PathChar && (left_char == r.PathChar || right_char == r.PathChar)) {
 				coords := maze.Coordinates{X: x, Y: y}
 				node := maze.NewNode(coords)
+
+				r.lookupNeighbourAbove(&lines, node, &nodesByCoord, ret)
+
 				ret.Nodes = append(ret.Nodes, node)
 				nodesByCoord[coords] = node
 
-				r.lookupNeighbourAbove(&lines, node, &nodesByCoord, ret)
 				if left_char == r.PathChar && right_char == r.WallChar ||
 					above_char == r.PathChar && (left_char == r.PathChar || right_char == r.PathChar) {
 					r.lookupNeighbourLeft(&line, node, &nodesByCoord)
@@ -125,7 +127,7 @@ func (r *TextReader) lookupNeighbourAbove(lines *[]string, node *maze.Node, node
 
 func (r *TextReader) lookupNeighbourLeft(line *string, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
 	for x := node.Coords.X - 1; x > 0; x-- {
-		if (*line)[x] == r.WallChar {
+		if (*line)[x] == r.WallChar && x < node.Coords.X-1 {
 			panic(fmt.Sprintf("Found no node before wall while looking to the left at neighbours of node %v", node))
 		}
 
