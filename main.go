@@ -3,21 +3,21 @@ package main
 import (
 	"maze-solver/io/reader"
 	"maze-solver/io/writer"
+	"maze-solver/maze/parser"
 	"maze-solver/solver"
 	"maze-solver/utils"
 )
 
 func main() {
-	input := "filename"
 	output := "filename"
 
-	reader := &reader.TextReader{PathChar: ' ', WallChar: '#'}
+	reader := &reader.TextReader{Filename: "filename", PathChar: ' ', WallChar: '#'}
 	writer := &writer.ImageWriter{}
 
 	solver := &solver.Bfs{}
 
-	maze, err := reader.Read(input)
-	utils.Check(err, "Couldn't read maze from %q", input)
+	maze, err := parser.Parse(reader)
+	utils.Check(err, "Couldn't read maze from %q", reader.Filename)
 
 	solved := solver.Solve(maze)
 	err = writer.Write(output, solved)
