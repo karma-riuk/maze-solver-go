@@ -8,11 +8,16 @@ import (
 
 func Parse(reader reader.Reader) (*maze.Maze, error) {
 	nodesByCoord := make(map[maze.Coordinates]*maze.Node)
-	ret := &maze.Maze{}
 
 	raw_maze, err := reader.Read()
 	if err != nil {
 		return nil, err
+	}
+
+	ret := &maze.Maze{
+		Width:  raw_maze.Width,
+		Height: raw_maze.Height,
+		Nodes:  []*maze.Node{},
 	}
 
 	y := 0
