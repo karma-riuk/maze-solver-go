@@ -9,7 +9,6 @@ import (
 )
 
 func TestTextReadTrivial(t *testing.T) {
-	fmt.Println("---------- Trivial ----------")
 	/* trivial.txt
 	   ## ##
 	   #   #
@@ -68,7 +67,6 @@ func TestTextReadTrivial(t *testing.T) {
 }
 
 func TestTextReadTrivialBigger(t *testing.T) {
-	fmt.Println("---------- Trivial Bigger ----------")
 	/* trivial-bigger.txt
 	   ### ###
 	   ### ###
@@ -119,10 +117,6 @@ func TestTextReadTrivialBigger(t *testing.T) {
 		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
 	}
 
-	for _, node := range got.Nodes {
-		fmt.Println(node)
-	}
-
 	for i, got := range got.Nodes {
 		expected := nodes[i]
 
@@ -135,7 +129,6 @@ func TestTextReadTrivialBigger(t *testing.T) {
 }
 
 func TestTextReadTrivialBiggerStaggered(t *testing.T) {
-	fmt.Println("---------- Trivial Staggered ----------")
 	/* trivial-bigger-staggered.txt
 	   ### ###
 	   ### ###
@@ -191,10 +184,6 @@ func TestTextReadTrivialBiggerStaggered(t *testing.T) {
 		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
 	}
 
-	for _, node := range got.Nodes {
-		fmt.Println(node)
-	}
-
 	for i, got := range got.Nodes {
 		expected := nodes[i]
 
@@ -207,8 +196,6 @@ func TestTextReadTrivialBiggerStaggered(t *testing.T) {
 }
 
 func TestTextReadNormal(t *testing.T) {
-	return
-	fmt.Println("---------- Normal ----------")
 	/* trivial-bigger-staggered.txt
 		##### #####
 		#     #   #
@@ -352,10 +339,6 @@ func TestTextReadNormal(t *testing.T) {
 			fmt.Printf("%v: %v\n", i, node)
 		}
 		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
-	}
-
-	for _, node := range got.Nodes {
-		fmt.Println(node)
 	}
 
 	for i, got := range got.Nodes {
