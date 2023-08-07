@@ -215,9 +215,9 @@ func TestTextReadNormal(t *testing.T) {
 		##### ### #
 		#5 6#7   8#
 		# # ##### #
-		#9#A   G B#
+		#9#A   F B#
 		### ### # #
-		#C D#E F# #
+		#C D#E G# #
 		# ####### #
 		#H   I#J K#
 		#####L#####
@@ -241,13 +241,13 @@ func TestTextReadNormal(t *testing.T) {
 
 		{1, 5}, // 9
 		{3, 5}, // A (10)
-		{7, 5}, // G (16)
 		{9, 5}, // B (11)
 
 		{1, 7}, // C (12)
 		{3, 7}, // D (13)
 		{5, 7}, // E (14)
-		{7, 7}, // F (15)
+		{7, 5}, // F (15)
+		{7, 7}, // G (16)
 
 		{1, 9}, // H (17)
 		{5, 9}, // I (18)
@@ -290,27 +290,27 @@ func TestTextReadNormal(t *testing.T) {
 	nodes[9].Up = nodes[5]
 
 	nodes[10].Up = nodes[6]
-	nodes[10].Right = nodes[16]
+	nodes[10].Right = nodes[15]
 	nodes[10].Down = nodes[13]
 
-	nodes[11].Up = nodes[6]
-	nodes[11].Right = nodes[16]
+	nodes[11].Up = nodes[8]
+	nodes[11].Left = nodes[15]
 	nodes[11].Down = nodes[20]
 
 	nodes[12].Right = nodes[13]
 	nodes[12].Down = nodes[17]
 
 	nodes[13].Up = nodes[10]
-	nodes[13].Left = nodes[16]
+	nodes[13].Left = nodes[12]
 
-	nodes[14].Right = nodes[15]
+	nodes[14].Right = nodes[16]
 
-	nodes[15].Up = nodes[16]
-	nodes[15].Left = nodes[14]
+	nodes[15].Left = nodes[10]
+	nodes[15].Right = nodes[11]
+	nodes[15].Down = nodes[16]
 
-	nodes[16].Left = nodes[10]
-	nodes[16].Right = nodes[11]
-	nodes[16].Down = nodes[15]
+	nodes[16].Up = nodes[15]
+	nodes[16].Left = nodes[14]
 
 	nodes[17].Up = nodes[12]
 	nodes[17].Right = nodes[18]
@@ -323,7 +323,7 @@ func TestTextReadNormal(t *testing.T) {
 	nodes[20].Up = nodes[11]
 	nodes[20].Left = nodes[19]
 
-	nodes[21].Up = nodes[20]
+	nodes[21].Up = nodes[18]
 
 	reader := reader.TextReader{
 		Filename: "../../assets/normal.txt",
