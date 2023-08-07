@@ -20,7 +20,7 @@ func NewNode(coords Coordinates) *Node {
 }
 
 type Maze struct {
-	Width, Height uint
+	Width, Height int
 	Nodes         []*Node
 }
 

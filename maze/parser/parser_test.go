@@ -51,6 +51,9 @@ func TestTextReadTrivial(t *testing.T) {
 	got, err := Parse(reader)
 	utils.Check(err, "Couldn't create maze from %q", reader.Filename)
 
+	utils.AssertEqual(t, got.Width, 5, "Normal: width differ")
+	utils.AssertEqual(t, got.Height, 3, "Normal: height differ")
+
 	if len(nodes) != len(got.Nodes) {
 		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
 	}
@@ -112,6 +115,9 @@ func TestTextReadTrivialBigger(t *testing.T) {
 
 	got, err := Parse(reader)
 	utils.Check(err, "Couldn't create maze from %q", reader.Filename)
+
+	utils.AssertEqual(t, got.Width, 7, "Normal: width differ")
+	utils.AssertEqual(t, got.Height, 5, "Normal: height differ")
 
 	if len(nodes) != len(got.Nodes) {
 		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
@@ -179,6 +185,9 @@ func TestTextReadTrivialBiggerStaggered(t *testing.T) {
 
 	got, err := Parse(reader)
 	utils.Check(err, "Couldn't create maze from %q", reader.Filename)
+
+	utils.AssertEqual(t, got.Width, 7, "Normal: width differ")
+	utils.AssertEqual(t, got.Height, 5, "Normal: height differ")
 
 	if len(nodes) != len(got.Nodes) {
 		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
@@ -333,6 +342,9 @@ func TestTextReadNormal(t *testing.T) {
 
 	got, err := Parse(reader)
 	utils.Check(err, "Couldn't create maze from %q", reader.Filename)
+
+	utils.AssertEqual(t, got.Width, 11, "Normal: width differ")
+	utils.AssertEqual(t, got.Height, 11, "Normal: height differ")
 
 	if len(nodes) != len(got.Nodes) {
 		for i, node := range got.Nodes {
