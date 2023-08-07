@@ -1,6 +1,7 @@
 package reader
 
 import (
+	"maze-solver/utils"
 	"testing"
 )
 
@@ -111,13 +112,13 @@ func TestStringsReader(t *testing.T) {
 		}
 		got, _ := reader.Read()
 
-		assertEqual(t, got.Width, test.width, "%s: width of raw maze don't match", test.name)
-		assertEqual(t, got.Height, test.height, "%s: height of raw maze don't match", test.name)
-		assertEqual(t, len(got.Data), len(test.expected), "%s: don't have the same number of rows", test.name)
+		utils.AssertEqual(t, got.Width, test.width, "%s: width of raw maze don't match", test.name)
+		utils.AssertEqual(t, got.Height, test.height, "%s: height of raw maze don't match", test.name)
+		utils.AssertEqual(t, len(got.Data), len(test.expected), "%s: don't have the same number of rows", test.name)
 
 		for y, line_exp := range test.expected {
 			line_got := got.Data[y]
-			assertEqual(t, len(line_got), len(line_exp), "%s (line %v): don't have same number of chunks, %v, want %v", test.name, y)
+			utils.AssertEqual(t, len(line_got), len(line_exp), "%s (line %v): don't have same number of chunks, %v, want %v", test.name, y)
 
 			for i, chunk_exp := range line_exp {
 				chunk_got := line_got[i]
@@ -126,12 +127,5 @@ func TestStringsReader(t *testing.T) {
 				}
 			}
 		}
-	}
-}
-
-func assertEqual[T comparable](t *testing.T, got T, want T, msg string, args ...any) {
-	args = append(args, got, want)
-	if got != want {
-		t.Fatalf(msg+"\nGot: %v, Want: %v", args...)
 	}
 }
