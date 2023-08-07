@@ -30,10 +30,7 @@ func Parse(reader reader.Reader) (*maze.Maze, error) {
 	for y = 1; y < raw_maze.Height-1; y++ {
 		for x := 1; x < raw_maze.Width-1; x++ {
 			// Parse middle of the maze
-			if raw_maze.IsPath(x, y) &&
-				(raw_maze.IsWall(x-1, y) && raw_maze.IsPath(x+1, y) ||
-					raw_maze.IsPath(x-1, y) && raw_maze.IsWall(x+1, y) ||
-					raw_maze.IsPath(x, y-1) && (raw_maze.IsPath(x-1, y) || raw_maze.IsPath(x+1, y))) {
+			if isCoordEligibleForNode(x, y, raw_maze) {
 				coords := maze.Coordinates{X: x, Y: y}
 				node := maze.NewNode(coords)
 
@@ -43,7 +40,8 @@ func Parse(reader reader.Reader) (*maze.Maze, error) {
 				nodesByCoord[coords] = node
 
 				if raw_maze.IsPath(x-1, y) && raw_maze.IsWall(x+1, y) ||
-					raw_maze.IsPath(x, y-1) && (raw_maze.IsPath(x-1, y) || raw_maze.IsPath(x+1, y)) {
+					raw_maze.IsPath(x, y-1) &&
+						(raw_maze.IsPath(x-1, y) || raw_maze.IsPath(x+1, y)) {
 					lookupNeighbourLeft(raw_maze, node, &nodesByCoord)
 				}
 			}
@@ -62,6 +60,14 @@ func Parse(reader reader.Reader) (*maze.Maze, error) {
 	}
 
 	return ret, nil
+}
+
+func isCoordEligibleForNode(x int, y int, raw_maze *reader.RawMaze) bool {
+	return raw_maze.IsPath(x, y) &&
+		(raw_maze.IsWall(x-1, y) && raw_maze.IsPath(x+1, y) || // wall left, path right
+			raw_maze.IsPath(x-1, y) && raw_maze.IsWall(x+1, y) || // path left, wall right
+			raw_maze.IsPath(x, y-1) && (raw_maze.IsPath(x-1, y) || raw_maze.IsPath(x+1, y)) || // path above and not in vertical corridor
+			raw_maze.IsWall(x-1, y) && raw_maze.IsWall(x+1, y) && raw_maze.IsPath(x, y-1) && raw_maze.IsWall(x, y+1)) // wall to left, below, above and path above
 }
 
 func lookupNeighbourAbove(raw_maze *reader.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node, m *maze.Maze) {
@@ -97,7 +103,7 @@ func lookupNeighbourAbove(raw_maze *reader.RawMaze, node *maze.Node, nodesByCoor
 func lookupNeighbourLeft(raw_maze *reader.RawMaze, node *maze.Node, nodesByCoord *map[maze.Coordinates]*maze.Node) {
 	for x := node.Coords.X - 1; x > 0; x-- {
 		if raw_maze.IsWall(x, node.Coords.Y) && x < node.Coords.X-1 {
-			panic(fmt.Sprintf("Found no node before wall while looking to the left at neighbours of node %v", node))
+			panic(fmt.Sprintf("Found no node before wall while looking to the left at neighbours of node %v (arrived at x=%v before hitting a wall)", node, x))
 		}
 
 		neighbour, ok := (*nodesByCoord)[maze.Coordinates{X: x, Y: node.Coords.Y}]
