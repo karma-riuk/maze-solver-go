@@ -10,4 +10,5 @@ require (
 require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mazznoer/csscolorparser v0.1.2 // indirect
+	golang.org/x/image v0.11.0
 )
