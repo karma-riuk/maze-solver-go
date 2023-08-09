@@ -270,68 +270,45 @@ func TestTextReadNormal(t *testing.T) {
 	}
 
 	// ---- Node linking ----
-	nodes[0].Down = nodes[2]
+	// Vertical
+	links := []struct {
+		from, to int
+	}{
+		{0, 2},
+		{2, 7},
+		{4, 8},
+		{5, 9},
+		{6, 10},
+		{8, 11},
+		{10, 13},
+		{15, 16},
+		{11, 20},
+		{12, 17},
+		{18, 21},
+	}
+	for _, link := range links {
+		nodes[link.from].Down = nodes[link.to]
+		nodes[link.to].Up = nodes[link.from]
+	}
 
-	nodes[1].Right = nodes[2]
-
-	nodes[2].Up = nodes[0]
-	nodes[2].Left = nodes[1]
-	nodes[2].Down = nodes[7]
-
-	nodes[3].Right = nodes[4]
-
-	nodes[4].Left = nodes[3]
-	nodes[4].Down = nodes[8]
-
-	nodes[5].Right = nodes[6]
-	nodes[5].Down = nodes[9]
-
-	nodes[6].Left = nodes[5]
-	nodes[6].Down = nodes[10]
-
-	nodes[7].Right = nodes[8]
-
-	nodes[8].Up = nodes[4]
-	nodes[8].Left = nodes[7]
-	nodes[8].Down = nodes[11]
-
-	nodes[9].Up = nodes[5]
-
-	nodes[10].Up = nodes[6]
-	nodes[10].Right = nodes[15]
-	nodes[10].Down = nodes[13]
-
-	nodes[11].Up = nodes[8]
-	nodes[11].Left = nodes[15]
-	nodes[11].Down = nodes[20]
-
-	nodes[12].Right = nodes[13]
-	nodes[12].Down = nodes[17]
-
-	nodes[13].Up = nodes[10]
-	nodes[13].Left = nodes[12]
-
-	nodes[14].Right = nodes[16]
-
-	nodes[15].Left = nodes[10]
-	nodes[15].Right = nodes[11]
-	nodes[15].Down = nodes[16]
-
-	nodes[16].Up = nodes[15]
-	nodes[16].Left = nodes[14]
-
-	nodes[17].Up = nodes[12]
-	nodes[17].Right = nodes[18]
-
-	nodes[18].Left = nodes[17]
-	nodes[18].Down = nodes[21]
-
-	nodes[19].Right = nodes[20]
-
-	nodes[20].Up = nodes[11]
-	nodes[20].Left = nodes[19]
-
-	nodes[21].Up = nodes[18]
+	links = []struct {
+		from, to int
+	}{
+		{1, 2},
+		{3, 4},
+		{5, 6},
+		{7, 8},
+		{10, 15},
+		{15, 11},
+		{12, 13},
+		{14, 16},
+		{17, 18},
+		{19, 20},
+	}
+	for _, link := range links {
+		nodes[link.from].Right = nodes[link.to]
+		nodes[link.to].Left = nodes[link.from]
+	}
 
 	reader := reader.TextReader{
 		Filename: "../../assets/normal.txt",
