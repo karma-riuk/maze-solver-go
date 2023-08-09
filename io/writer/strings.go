@@ -15,9 +15,13 @@ type StringsWriter struct {
 
 func (w *StringsWriter) Write() error {
 	w.lines = make([][]byte, w.Maze.Height)
+
+	// Fill the lines with walls
 	for y := 0; y < w.Maze.Height; y++ {
 		w.lines[y] = bytes.Repeat([]byte{w.WallChar}, w.Maze.Width)
 	}
+
+	// Fill in the paths
 	for _, node := range w.Maze.Nodes {
 		if node.Right != nil {
 			w.fillHorizontally(node.Coords, node.Right.Coords, w.PathChar)
@@ -27,6 +31,7 @@ func (w *StringsWriter) Write() error {
 		}
 	}
 
+	// Fill in the solution
 	for i := 0; i < len(w.Maze.Solution)-1; i++ {
 		current := w.Maze.Solution[i].Coords
 		next := w.Maze.Solution[i+1].Coords
