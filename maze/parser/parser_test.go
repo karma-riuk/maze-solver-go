@@ -205,7 +205,7 @@ func TestTextReadTrivialBiggerStaggered(t *testing.T) {
 }
 
 func TestTextReadNormal(t *testing.T) {
-	/* trivial-bigger-staggered.txt
+	/* normal.txt
 		##### #####
 		#     #   #
 		##### ### #
