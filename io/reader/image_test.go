@@ -34,7 +34,7 @@ func TestImageReader(t *testing.T) {
 			7, 5,
 			40, 40,
 			white, black,
-			"../../assets/bigger.png",
+			"../../assets/trivial-bigger.png",
 			[][]byte{
 				{0b_0001000_0},
 				{0b_0001000_0},
@@ -49,7 +49,7 @@ func TestImageReader(t *testing.T) {
 			40, 40,
 
 			white, black,
-			"../../assets/bigger_staggered.png",
+			"../../assets/trivial-bigger-staggered.png",
 			[][]byte{
 				{0b_0001000_0},
 				{0b_0001000_0},
