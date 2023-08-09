@@ -231,7 +231,6 @@ func TestTextReadNormal(t *testing.T) {
 		#H   I#J K#
 		#####L#####
 	*/
-	// TODO: we are not detecting vertical dead-ends that go downwards
 	nodes := make([]*maze.Node, 22)
 
 	// ---- Node creation ----
