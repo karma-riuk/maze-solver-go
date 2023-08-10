@@ -56,17 +56,28 @@ func (w *ImageWriter) Write() error {
 	width, height = w.CellWidth, w.CellHeight
 	for i, from := range w.Maze.Solution[:len(w.Maze.Solution)-1] {
 		to := w.Maze.Solution[i+1]
+
 		if from.Coords.X == to.Coords.X {
+			// Fill verticallly
 			x0 = from.Coords.X * w.CellWidth
 
-			for y := from.Coords.Y; y < to.Coords.Y; y++ {
-				y0 = y * w.CellHeight
-				w.draw(x0, y0, width, height, colors[c])
-				c++
+			if from.Coords.Y < to.Coords.Y {
+				for y := from.Coords.Y; y < to.Coords.Y; y++ {
+					y0 = y * w.CellHeight
+					w.draw(x0, y0, width, height, colors[c])
+					c++
+				}
+			} else {
+				for y := from.Coords.Y; y > to.Coords.Y; y-- {
+					y0 = y * w.CellHeight
+					w.draw(x0, y0, width, height, colors[c])
+					c++
+				}
 			}
 			y0 = to.Coords.Y * w.CellHeight
 			w.draw(x0, y0, width, height, colors[c])
 		} else {
+			// Fill horizontally
 			y0 = from.Coords.Y * w.CellHeight
 
 			if from.Coords.X < to.Coords.X {
