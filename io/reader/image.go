@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"maze-solver/utils"
 	"os"
 
 	"golang.org/x/image/draw"
@@ -16,6 +17,7 @@ type ImageReader struct {
 }
 
 func (r *ImageReader) Read() (*RawMaze, error) {
+	defer utils.Timer("Image reader", 3)()
 	image, err := r.getShrunkImage()
 	if err != nil {
 		return nil, err

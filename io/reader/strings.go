@@ -11,6 +11,7 @@ type StringsReader struct {
 }
 
 func (r *StringsReader) Read() (*RawMaze, error) {
+	defer utils.Timer("Strings Reader", 3)()
 	width, height := len((*r.Lines)[0]), len(*r.Lines)
 	ret := &RawMaze{
 		Width:  width,

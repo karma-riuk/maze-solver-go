@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"maze-solver/maze"
+	"maze-solver/utils"
 )
 
 type StringsWriter struct {
@@ -14,6 +15,7 @@ type StringsWriter struct {
 }
 
 func (w *StringsWriter) Write() error {
+	defer utils.Timer("Strings writer", 3)()
 	w.lines = make([][]byte, w.Maze.Height)
 
 	// Fill the lines with walls
