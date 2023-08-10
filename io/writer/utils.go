@@ -13,7 +13,6 @@ func trivial() *maze.SolvedMaze {
 	   #123#
 	   ###4#
 	*/
-	ret := &maze.SolvedMaze{}
 	nodes := make([]*maze.Node, 5)
 
 	nodes[0] = maze.NewNode(maze.Coordinates{X: 2, Y: 0})
@@ -37,15 +36,16 @@ func trivial() *maze.SolvedMaze {
 
 	nodes[4].Up = nodes[3]
 
-	solution := []*maze.Node{
-		nodes[0], nodes[2], nodes[3], nodes[4],
+	ret := &maze.SolvedMaze{
+		Maze: &maze.Maze{
+			Width:  5,
+			Height: 3,
+			Nodes:  nodes,
+		},
+		Solution: []*maze.Node{
+			nodes[0], nodes[2], nodes[3], nodes[4],
+		},
 	}
-
-	ret.Nodes = nodes
-	ret.Width = 5
-	ret.Height = 3
-
-	ret.Solution = solution
 
 	return ret
 }
@@ -89,7 +89,7 @@ func bigger() *maze.SolvedMaze {
 	nodes[4].Up = nodes[3]
 
 	ret := &maze.SolvedMaze{
-		Maze: maze.Maze{
+		Maze: &maze.Maze{
 			Width:  7,
 			Height: 5,
 			Nodes:  nodes,
@@ -146,7 +146,7 @@ func bigger_staggered() *maze.SolvedMaze {
 	nodes[5].Up = nodes[4]
 
 	ret := &maze.SolvedMaze{
-		Maze: maze.Maze{
+		Maze: &maze.Maze{
 			Width:  7,
 			Height: 5,
 			Nodes:  nodes,
@@ -266,7 +266,7 @@ func normal() *maze.SolvedMaze {
 	}
 
 	ret := &maze.SolvedMaze{
-		Maze: maze.Maze{
+		Maze: &maze.Maze{
 			Width:  11,
 			Height: 11,
 			Nodes:  nodes,
