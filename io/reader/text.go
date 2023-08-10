@@ -2,6 +2,7 @@ package reader
 
 import (
 	"bufio"
+	"maze-solver/utils"
 	"os"
 )
 
@@ -11,6 +12,7 @@ type TextReader struct {
 }
 
 func (r TextReader) Read() (*RawMaze, error) {
+	defer utils.Timer("Text Reader", 3)()
 	lines, err := getLines(r.Filename)
 	if err != nil {
 		return nil, err

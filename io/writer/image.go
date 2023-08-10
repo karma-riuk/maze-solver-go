@@ -7,6 +7,7 @@ import (
 	"image/draw"
 	"image/png"
 	"maze-solver/maze"
+	"maze-solver/utils"
 	"os"
 
 	"github.com/mazznoer/colorgrad"
@@ -22,6 +23,7 @@ type ImageWriter struct {
 }
 
 func (w *ImageWriter) Write() error {
+	defer utils.Timer("Image writer", 3)()
 	if w.Filename[len(w.Filename)-4:] != ".png" {
 		return errors.New("Filename of ImageWriter doesn't have .png extension. The only suppported image type is png")
 	}
