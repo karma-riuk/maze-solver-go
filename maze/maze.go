@@ -48,6 +48,6 @@ type Maze struct {
 }
 
 type SolvedMaze struct {
-	Maze
+	*Maze
 	Solution []*Node
 }
