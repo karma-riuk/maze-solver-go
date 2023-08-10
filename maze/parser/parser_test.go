@@ -340,12 +340,207 @@ func TestTextReadNormal(t *testing.T) {
 	}
 }
 
+func TestTextReadNormal2(t *testing.T) {
+	/* normal2.txt
+	   ####### #######
+	   #   #       # #
+	   ### # ##### # #
+	   #   #     #   #
+	   # ########### #
+	   #     #     # #
+	   ### # # ##### #
+	   #   #   #   # #
+	   # ### ### # # #
+	   # #   #   #   #
+	   # ### # #######
+	   #   # # #     #
+	   # # ### ### # #
+	   # #         # #
+	   ####### #######
+
+	   Nodes are
+	   #######0#######
+	   #1 2#3 4   5#B#
+	   ### # ##### # #
+	   #6 7#8   9#A C#
+	   # ########### #
+	   #D I E#F   G# #
+	   ### # # ##### #
+	   #H J#K L#M N# #
+	   # ### ### # # #
+	   # #O P#Q R#S T#
+	   # ### # #######
+	   #U V#W# #X C Y#
+	   # # ### ### # #
+	   #Z#A   B   D#E#
+	   #######F#######
+	*/
+	nodes := make([]*maze.Node, 42)
+
+	// ---- Node creation ----
+	coords := []struct{ x, y int }{
+		{7, 0}, // 0
+
+		{1, 1},  // 1
+		{3, 1},  // 2
+		{5, 1},  // 3
+		{7, 1},  // 4
+		{11, 1}, // 5
+
+		{1, 3},  // 6
+		{3, 3},  // 7
+		{5, 3},  // 8
+		{9, 3},  // 9
+		{11, 3}, // 10 (A)
+		{13, 1}, // 11 (B)
+		{13, 3}, // 12 (C)
+
+		{1, 5},  // 13 (D)
+		{5, 5},  // 14 (E)
+		{7, 5},  // 15 (F)
+		{11, 5}, // 16 (G)
+
+		{1, 7},  // 17 (H)
+		{3, 5},  // 18 (I)
+		{3, 7},  // 19 (J)
+		{5, 7},  // 20 (K)
+		{7, 7},  // 21 (L)
+		{9, 7},  // 22 (M)
+		{11, 7}, // 23 (N)
+
+		{3, 9},  // 24 (O)
+		{5, 9},  // 25 (P)
+		{7, 9},  // 26 (Q)
+		{9, 9},  // 27 (R)
+		{11, 9}, // 28 (S)
+		{13, 9}, // 29 (T)
+
+		{1, 11},  // 30 (U)
+		{3, 11},  // 31 (V)
+		{5, 11},  // 32 (W)
+		{9, 11},  // 33 (X)
+		{13, 11}, // 34 (Y)
+
+		{1, 13},  // 35 (Z)
+		{3, 13},  // 36 (AA)
+		{7, 13},  // 37 (AB)
+		{11, 11}, // 38 (AC)
+		{11, 13}, // 39 (AD)
+		{13, 13}, // 40 (AE)
+
+		{7, 14}, // 42 (AF)
+	}
+
+	for i, coord := range coords {
+		nodes[i] = maze.NewNode(maze.Coordinates{X: coord.x, Y: coord.y})
+	}
+
+	// ---- Node linking ----
+	// Vertical
+	links := []struct {
+		from, to int
+	}{
+		{0, 4},
+		{2, 7},
+		{3, 8},
+		{5, 10},
+		{11, 12},
+		{6, 13},
+		{12, 29},
+		{18, 19},
+		{14, 20},
+		{15, 21},
+		{17, 30},
+		{20, 25},
+		{22, 27},
+		{23, 28},
+		{25, 32},
+		{26, 37},
+		{30, 35},
+		{31, 36},
+		{38, 39},
+		{34, 40},
+		{37, 41},
+	}
+	for _, link := range links {
+		nodes[link.from].Down = nodes[link.to]
+		nodes[link.to].Up = nodes[link.from]
+	}
+
+	links = []struct {
+		from, to int
+	}{
+		{1, 2},
+		{3, 4},
+		{4, 5},
+
+		{6, 7},
+		{8, 9},
+		{10, 12},
+
+		{13, 18},
+		{18, 14},
+		{15, 16},
+
+		{17, 19},
+		{20, 21},
+		{22, 23},
+
+		{24, 25},
+		{26, 27},
+		{28, 29},
+
+		{30, 31},
+		{33, 38},
+		{38, 34},
+		{36, 37},
+		{37, 39},
+	}
+	for _, link := range links {
+		nodes[link.from].Right = nodes[link.to]
+		nodes[link.to].Left = nodes[link.from]
+	}
+
+	reader := reader.TextReader{
+		Filename: "../../assets/normal2.txt",
+		PathChar: ' ',
+		WallChar: '#',
+	}
+
+	got, err := Parse(reader)
+	utils.Check(err, "Couldn't create maze from %q", reader.Filename)
+
+	utils.AssertEqual(t, got.Width, 15, "Normal 2: width differ")
+	utils.AssertEqual(t, got.Height, 15, "Normal 2: height differ")
+
+	if len(nodes) != len(got.Nodes) {
+		for i, node := range got.Nodes {
+			fmt.Printf("%v: %v\n", i, node)
+		}
+		t.Fatalf("Didn't get the same size of nodes: %v, want %v", len(got.Nodes), len(nodes))
+	}
+
+	for i, got := range got.Nodes {
+		expected := nodes[i]
+
+		checkNode(t, i, got, expected, "")
+		checkNode(t, i, got.Left, expected.Left, "left")
+		checkNode(t, i, got.Right, expected.Right, "Right")
+		checkNode(t, i, got.Up, expected.Up, "Up")
+		checkNode(t, i, got.Down, expected.Down, "Down")
+	}
+}
+
 func checkNode(t *testing.T, i int, got *maze.Node, expected *maze.Node, side string) {
-	if expected == nil {
+	if expected == nil && got != nil {
+		t.Fatalf("Somehow there is a node %s of %v, didn't want any", side, i)
+	}
+
+	if expected == nil && got == nil {
 		return
 	}
 
-	if got == nil {
+	if expected != nil && got == nil {
 		t.Fatalf("No %s node of %v, want %v", side, i, expected.Coords)
 	}
 
