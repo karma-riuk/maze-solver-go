@@ -58,6 +58,9 @@ func (w *StringsWriter) fillHorizontally(from maze.Coordinates, to maze.Coordina
 
 func (w *StringsWriter) fillVertically(from maze.Coordinates, to maze.Coordinates, char byte) {
 	x := from.X
+	if from.Y > to.Y {
+		from, to = to, from
+	}
 	for y := from.Y; y <= to.Y; y++ {
 		w.lines[y][x] = char
 	}
