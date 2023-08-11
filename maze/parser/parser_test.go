@@ -42,7 +42,7 @@ func TestTextReadTrivial(t *testing.T) {
 
 	nodes[4].Up = nodes[3]
 
-	reader := reader.TextReader{
+	reader := &reader.TextReader{
 		Filename: "../../assets/trivial.txt",
 		PathChar: ' ',
 		WallChar: '#',
@@ -107,7 +107,7 @@ func TestTextReadTrivialBigger(t *testing.T) {
 
 	nodes[4].Up = nodes[3]
 
-	reader := reader.TextReader{
+	reader := &reader.TextReader{
 		Filename: "../../assets/trivial-bigger.txt",
 		PathChar: ' ',
 		WallChar: '#',
@@ -177,7 +177,7 @@ func TestTextReadTrivialBiggerStaggered(t *testing.T) {
 
 	nodes[5].Up = nodes[4]
 
-	reader := reader.TextReader{
+	reader := &reader.TextReader{
 		Filename: "../../assets/trivial-bigger-staggered.txt",
 		PathChar: ' ',
 		WallChar: '#',
@@ -310,7 +310,7 @@ func TestTextReadNormal(t *testing.T) {
 		nodes[link.to].Left = nodes[link.from]
 	}
 
-	reader := reader.TextReader{
+	reader := &reader.TextReader{
 		Filename: "../../assets/normal.txt",
 		PathChar: ' ',
 		WallChar: '#',
@@ -501,7 +501,7 @@ func TestTextReadNormal2(t *testing.T) {
 		nodes[link.to].Left = nodes[link.from]
 	}
 
-	reader := reader.TextReader{
+	reader := &reader.TextReader{
 		Filename: "../../assets/normal2.txt",
 		PathChar: ' ',
 		WallChar: '#',
