@@ -1,11 +1,7 @@
 package writer
 
 import (
-	"image/color"
-	"maze-solver/maze"
 	"testing"
-
-	"github.com/mazznoer/colorgrad"
 )
 
 func TestImageWriter(t *testing.T) {
