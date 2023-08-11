@@ -11,7 +11,7 @@ type TextReader struct {
 	PathChar, WallChar byte
 }
 
-func (r TextReader) Read() (*RawMaze, error) {
+func (r *TextReader) Read() (*RawMaze, error) {
 	defer utils.Timer("Text Reader", 3)()
 	lines, err := getLines(r.Filename)
 	if err != nil {
