@@ -1,16 +1,20 @@
 package solver
 
 import (
+	"log"
 	"maze-solver/maze"
 	"maze-solver/utils"
 )
 
-type TurnLeftSolver struct {
+type DFSSolver struct {
 	visited map[*maze.Node]bool
 }
 
-func (s *TurnLeftSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
+func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	defer utils.Timer("Turn left algorithm", 2)()
+
+	log.Println("Starting dfs")
+	log.Printf("m.Nodes: %v\n", len(m.Nodes))
 
 	current, end := m.Nodes[0], m.Nodes[len(m.Nodes)-1]
 	s.visited = make(map[*maze.Node]bool, len(m.Nodes))
@@ -54,7 +58,7 @@ func (s *TurnLeftSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	return ret
 }
 
-func (s *TurnLeftSolver) wasVisited(node *maze.Node) bool {
+func (s *DFSSolver) wasVisited(node *maze.Node) bool {
 	if node == nil {
 		return true
 	}

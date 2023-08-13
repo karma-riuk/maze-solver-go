@@ -24,7 +24,7 @@ var TYPES = []string{
 func (f *SolverFactory) Get() Solver {
 	switch *f.Type {
 	case _TURN_LEFT:
-		return &TurnLeftSolver{}
+		return &DFSSolver{}
 	}
 	panic(fmt.Sprintf("Unrecognized solver type %q", *f.Type))
 }
