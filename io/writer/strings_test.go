@@ -1,7 +1,6 @@
 package writer
 
 import (
-	"fmt"
 	"maze-solver/maze"
 	"maze-solver/utils"
 	"testing"
@@ -69,7 +68,6 @@ func TestStringsWriter(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		fmt.Printf("----------- %s -----------\n", test.name)
 		writer := StringsWriter{
 			PathChar:     test.pathChar,
 			WallChar:     test.wallChar,
