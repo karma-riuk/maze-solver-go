@@ -1,7 +1,6 @@
 package solver
 
 import (
-	"log"
 	"maze-solver/maze"
 	"maze-solver/utils"
 )
@@ -12,9 +11,6 @@ type DFSSolver struct {
 
 func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	defer utils.Timer("Turn left algorithm", 2)()
-
-	log.Println("Starting dfs")
-	log.Printf("m.Nodes: %v\n", len(m.Nodes))
 
 	current, end := m.Nodes[0], m.Nodes[len(m.Nodes)-1]
 	s.visited = make(map[*maze.Node]bool, len(m.Nodes))
