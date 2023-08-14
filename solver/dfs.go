@@ -6,18 +6,14 @@ import (
 )
 
 type DFSSolver struct {
-	visited map[*maze.Node]bool
+	solver
 }
 
 func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
-	defer utils.Timer("Turn left algorithm", 2)()
+	defer utils.Timer("DFS algorithm", 2)()
 
+	s.initVisited(m)
 	current, end := m.Nodes[0], m.Nodes[len(m.Nodes)-1]
-	s.visited = make(map[*maze.Node]bool, len(m.Nodes))
-
-	for _, node := range m.Nodes {
-		s.visited[node] = false
-	}
 
 	stack := make([]*maze.Node, 0, len(m.Nodes))
 	stack = append(stack, current)
@@ -52,12 +48,4 @@ func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 		Solution: stack,
 	}
 	return ret
-}
-
-func (s *DFSSolver) wasVisited(node *maze.Node) bool {
-	if node == nil {
-		return true
-	}
-	visited, _ := s.visited[node]
-	return visited
 }
