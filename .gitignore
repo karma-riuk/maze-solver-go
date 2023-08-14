@@ -20,3 +20,5 @@
 # Go workspace file
 go.work
 /Session.vim
+/maze.png
+/maze_sol.png
