@@ -131,12 +131,12 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 
 	cellSizeIn := argparser.Int("", "cell-size-in", &argparse.Options{
 		Help:    "Size of a cell (in pixels) for input file of image type",
-		Default: 20,
+		Default: 3,
 	})
 
 	cellSizeOut := argparser.Int("", "cell-size-out", &argparse.Options{
 		Help:    "Size of a cell (in pixels) for output file of image type",
-		Default: 20,
+		Default: 3,
 	})
 
 	solverFactory.Type = argparser.Selector("a", "algo", solver.TYPES, &argparse.Options{
