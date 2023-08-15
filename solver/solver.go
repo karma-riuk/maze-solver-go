@@ -17,12 +17,14 @@ const (
 	_DFS      = "dfs"
 	_BFS      = "bfs"
 	_Dijkstra = "dijkstra"
+	_AStar    = "a-star"
 )
 
 var TYPES = []string{
 	_DFS,
 	_BFS,
 	_Dijkstra,
+	_AStar,
 }
 
 func (f *SolverFactory) Get() Solver {
@@ -31,6 +33,8 @@ func (f *SolverFactory) Get() Solver {
 		return &DFSSolver{}
 	case _BFS:
 		return &BFSSolver{}
+	case _AStar:
+		return &AStarSolver{}
 	case _Dijkstra:
 		return &DijkstraSolver{}
 	}
