@@ -18,7 +18,7 @@ func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	for current != end {
 		current.Visited = true
 
-		left_visited, right_visited, up_visited, down_visited := wasVisited(current.Left), wasVisited(current.Right), wasVisited(current.Up), wasVisited(current.Down)
+		left_visited, right_visited, up_visited, down_visited := visited(current.Left), visited(current.Right), visited(current.Up), visited(current.Down)
 
 		if left_visited && right_visited && up_visited && down_visited {
 			// dead end or no more visited nodes

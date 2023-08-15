@@ -107,7 +107,7 @@ func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 }
 
 func (s *BFSSolver) addIfNotVisited(node *maze.Node, current_history []*maze.Node) {
-	if !wasVisited(node) {
+	if !visited(node) {
 		new_history := make([]*maze.Node, len(current_history)+1)
 		copy(new_history, current_history)
 		new_history[len(current_history)] = node
