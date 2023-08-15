@@ -9,7 +9,6 @@ import (
 )
 
 type BFSSolver struct {
-	solver
 	queue *Queue
 }
 
@@ -76,8 +75,6 @@ func history_str(history []*maze.Node) string {
 func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	defer utils.Timer("BFS algorithm", 2)()
 
-	s.initVisited(m)
-
 	current, end := m.Nodes[0], m.Nodes[len(m.Nodes)-1]
 	s.queue = &Queue{
 		head: nil,
@@ -87,19 +84,14 @@ func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	current_history := make([]*maze.Node, 0, len(m.Nodes))
 	current_history = append(current_history, current)
 
-	// fmt.Printf("end.Coords: %v\n", end.Coords)
 	var err error
 	for current != end {
-		// fmt.Printf("current.Coords: %v\n", current.Coords)
-
-		s.visited[current] = true
+		current.Visited = true
 
 		s.addIfNotVisited(current.Down, current_history)
 		s.addIfNotVisited(current.Left, current_history)
 		s.addIfNotVisited(current.Right, current_history)
 		s.addIfNotVisited(current.Up, current_history)
-
-		// fmt.Println(s.queue)
 
 		current_history, err = s.queue.dequeue()
 		if err != nil {
@@ -108,10 +100,6 @@ func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 		current = current_history[len(current_history)-1]
 	}
 
-	// for i, node := range current_history {
-	// 	fmt.Printf("%v: %v\n", i, node.Coords)
-	// }
-
 	return &maze.SolvedMaze{
 		Maze:     m,
 		Solution: current_history,
@@ -119,7 +107,7 @@ func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 }
 
 func (s *BFSSolver) addIfNotVisited(node *maze.Node, current_history []*maze.Node) {
-	if !s.wasVisited(node) {
+	if !wasVisited(node) {
 		new_history := make([]*maze.Node, len(current_history)+1)
 		copy(new_history, current_history)
 		new_history[len(current_history)] = node

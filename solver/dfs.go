@@ -5,23 +5,20 @@ import (
 	"maze-solver/utils"
 )
 
-type DFSSolver struct {
-	solver
-}
+type DFSSolver struct{}
 
 func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	defer utils.Timer("DFS algorithm", 2)()
 
-	s.initVisited(m)
 	current, end := m.Nodes[0], m.Nodes[len(m.Nodes)-1]
 
 	stack := make([]*maze.Node, 0, len(m.Nodes))
 	stack = append(stack, current)
 
 	for current != end {
-		s.visited[current] = true
+		current.Visited = true
 
-		left_visited, right_visited, up_visited, down_visited := s.wasVisited(current.Left), s.wasVisited(current.Right), s.wasVisited(current.Up), s.wasVisited(current.Down)
+		left_visited, right_visited, up_visited, down_visited := wasVisited(current.Left), wasVisited(current.Right), wasVisited(current.Up), wasVisited(current.Down)
 
 		if left_visited && right_visited && up_visited && down_visited {
 			// dead end or no more visited nodes
