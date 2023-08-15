@@ -9,10 +9,6 @@ type Solver interface {
 	Solve(*maze.Maze) *maze.SolvedMaze
 }
 
-type solver struct {
-	visited map[*maze.Node]bool
-}
-
 type SolverFactory struct {
 	Type *string
 }
@@ -37,18 +33,6 @@ func (f *SolverFactory) Get() Solver {
 	panic(fmt.Sprintf("Unrecognized solver type %q", *f.Type))
 }
 
-func (s *solver) wasVisited(node *maze.Node) bool {
-	if node == nil {
-		return true
-	}
-	visited, _ := s.visited[node]
-	return visited
-}
-
-func (s *solver) initVisited(m *maze.Maze) {
-	s.visited = make(map[*maze.Node]bool, len(m.Nodes))
-
-	for _, node := range m.Nodes {
-		s.visited[node] = false
-	}
+func wasVisited(node *maze.Node) bool {
+	return node == nil || node.Visited
 }

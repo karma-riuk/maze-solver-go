@@ -30,6 +30,7 @@ type Node struct {
 	Coords      Coordinates
 	Up, Down    *Node
 	Left, Right *Node
+	Visited     bool `default:"false"`
 }
 
 func NewNode(coords Coordinates) *Node {
