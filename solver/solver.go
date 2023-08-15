@@ -14,13 +14,15 @@ type SolverFactory struct {
 }
 
 const (
-	_DFS = "dfs"
-	_BFS = "bfs"
+	_DFS      = "dfs"
+	_BFS      = "bfs"
+	_Dijkstra = "dijkstra"
 )
 
 var TYPES = []string{
 	_DFS,
 	_BFS,
+	_Dijkstra,
 }
 
 func (f *SolverFactory) Get() Solver {
@@ -29,6 +31,8 @@ func (f *SolverFactory) Get() Solver {
 		return &DFSSolver{}
 	case _BFS:
 		return &BFSSolver{}
+	case _Dijkstra:
+		return &DijkstraSolver{}
 	}
 	panic(fmt.Sprintf("Unrecognized solver type %q", *f.Type))
 }

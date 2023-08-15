@@ -1,0 +1,85 @@
+package solver
+
+import (
+	"maze-solver/maze"
+	"maze-solver/utils"
+	"slices"
+	"sort"
+)
+
+type DijkstraSolver struct {
+	dist_from_start map[*maze.Node]int
+	parent          map[*maze.Node]*maze.Node
+	stack           sorted_stack
+}
+
+type sorted_stack []*maze.Node
+
+func (s *DijkstraSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
+	defer utils.Timer("Dijkstra algorithm", 2)()
+	s.dist_from_start = make(map[*maze.Node]int, len(m.Nodes))
+	s.parent = make(map[*maze.Node]*maze.Node, len(m.Nodes))
+
+	for _, node := range m.Nodes {
+		s.dist_from_start[node] = 0
+	}
+
+	current, end := m.Nodes[0], m.Nodes[len(m.Nodes)-1]
+
+	for current != end {
+		current.Visited = true
+
+		for _, child := range []*maze.Node{current.Left, current.Right, current.Up, current.Down} {
+			if child != nil {
+				dist := s.dist_from_start[current] + int(current.Coords.Distance(child.Coords))
+				if !child.Visited {
+					s.parent[child] = current
+					s.dist_from_start[child] = dist
+					s.stack.insert(child, &s.dist_from_start)
+				} else if s.dist_from_start[child] > dist {
+					s.parent[child] = current
+					s.dist_from_start[child] = dist
+					sort.Slice(s.stack, func(i, j int) bool {
+						return s.dist_from_start[s.stack[i]] < s.dist_from_start[s.stack[j]]
+					})
+				}
+			}
+		}
+		current = s.stack.pop()
+	}
+
+	solution := make([]*maze.Node, 0, len(m.Nodes))
+	for current != m.Nodes[0] {
+		solution = append(solution, current)
+		current = s.parent[current]
+	}
+	solution = append(solution, m.Nodes[0])
+
+	for i, j := 0, len(solution)-1; i < j; i, j = i+1, j-1 {
+		solution[i], solution[j] = solution[j], solution[i]
+	}
+
+	return &maze.SolvedMaze{
+		Maze:     m,
+		Solution: solution,
+	}
+}
+
+func (s *sorted_stack) insert(node *maze.Node, dists *map[*maze.Node]int) {
+	var dummy *maze.Node
+	*s = append(*s, dummy) // extend the slice
+
+	i, _ := slices.BinarySearchFunc(*s, node, func(e, t *maze.Node) int {
+		return (*dists)[t] - (*dists)[e]
+	})
+
+	copy((*s)[i+1:], (*s)[i:]) // make room
+	(*s)[i] = node
+}
+
+func (s *sorted_stack) pop() *maze.Node {
+	last_i := len(*s) - 1
+	ret := (*s)[last_i]
+	*s = (*s)[:last_i]
+	return ret
+}
