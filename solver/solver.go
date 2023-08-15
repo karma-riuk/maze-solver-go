@@ -33,6 +33,6 @@ func (f *SolverFactory) Get() Solver {
 	panic(fmt.Sprintf("Unrecognized solver type %q", *f.Type))
 }
 
-func wasVisited(node *maze.Node) bool {
+func visited(node *maze.Node) bool {
 	return node == nil || node.Visited
 }
