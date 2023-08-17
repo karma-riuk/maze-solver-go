@@ -27,16 +27,24 @@ var TYPES = []string{
 	_AStar,
 }
 
-func (f *SolverFactory) Get() Solver {
+func (f *SolverFactory) Get(solved_chan chan<- *maze.SolvedMaze) Solver {
 	switch *f.Type {
 	case _DFS:
-		return &DFSSolver{}
+		return &DFSSolver{
+			solved_chan: solved_chan,
+		}
 	case _BFS:
-		return &BFSSolver{}
+		return &BFSSolver{
+			solved_chan: solved_chan,
+		}
 	case _AStar:
-		return &AStarSolver{}
+		return &AStarSolver{
+			solved_chan: solved_chan,
+		}
 	case _Dijkstra:
-		return &DijkstraSolver{}
+		return &DijkstraSolver{
+			solved_chan: solved_chan,
+		}
 	}
 	panic(fmt.Sprintf("Unrecognized solver type %q", *f.Type))
 }

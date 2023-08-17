@@ -5,7 +5,9 @@ import (
 	"maze-solver/utils"
 )
 
-type DFSSolver struct{}
+type DFSSolver struct {
+	solved_chan chan<- *maze.SolvedMaze
+}
 
 func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	defer utils.Timer("DFS algorithm", 2)()
@@ -17,6 +19,12 @@ func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 
 	for current != end {
 		current.Visited = true
+		if s.solved_chan != nil {
+			s.solved_chan <- &maze.SolvedMaze{
+				Maze:     m,
+				Solution: stack,
+			}
+		}
 
 		left_visited, right_visited, up_visited, down_visited := visited(current.Left), visited(current.Right), visited(current.Up), visited(current.Down)
 

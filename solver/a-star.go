@@ -7,6 +7,7 @@ import (
 )
 
 type AStarSolver struct {
+	solved_chan     chan<- *maze.SolvedMaze
 	dist_from_start map[*maze.Node]int
 	dist_from_end   map[*maze.Node]int
 	parent          map[*maze.Node]*maze.Node
@@ -28,6 +29,12 @@ func (s *AStarSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 
 	for current != end {
 		current.Visited = true
+		if s.solved_chan != nil {
+			s.solved_chan <- &maze.SolvedMaze{
+				Maze:     m,
+				Solution: s.generateSolution(current, m),
+			}
+		}
 
 		for _, child := range []*maze.Node{current.Left, current.Right, current.Up, current.Down} {
 			if child != nil {
@@ -48,19 +55,21 @@ func (s *AStarSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 		current = s.stack.pop()
 	}
 
+	return &maze.SolvedMaze{
+		Maze:     m,
+		Solution: s.generateSolution(current, m),
+	}
+}
+
+func (s *AStarSolver) generateSolution(current *maze.Node, m *maze.Maze) []*maze.Node {
 	solution := make([]*maze.Node, 0, len(m.Nodes))
 	for current != m.Nodes[0] {
 		solution = append(solution, current)
 		current = s.parent[current]
 	}
 	solution = append(solution, m.Nodes[0])
-
 	for i, j := 0, len(solution)-1; i < j; i, j = i+1, j-1 {
 		solution[i], solution[j] = solution[j], solution[i]
 	}
-
-	return &maze.SolvedMaze{
-		Maze:     m,
-		Solution: solution,
-	}
+	return solution
 }

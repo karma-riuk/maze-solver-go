@@ -9,7 +9,8 @@ import (
 )
 
 type BFSSolver struct {
-	queue *Queue
+	solved_chan chan<- *maze.SolvedMaze
+	queue       *Queue
 }
 
 type Queue struct {
@@ -87,6 +88,12 @@ func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 	var err error
 	for current != end {
 		current.Visited = true
+		if s.solved_chan != nil {
+			s.solved_chan <- &maze.SolvedMaze{
+				Maze:     m,
+				Solution: current_history,
+			}
+		}
 
 		s.addIfNotVisited(current.Down, current_history)
 		s.addIfNotVisited(current.Left, current_history)
@@ -98,6 +105,12 @@ func (s *BFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 			panic(err)
 		}
 		current = current_history[len(current_history)-1]
+	}
+	if s.solved_chan != nil {
+		s.solved_chan <- &maze.SolvedMaze{
+			Maze:     m,
+			Solution: current_history,
+		}
 	}
 
 	return &maze.SolvedMaze{

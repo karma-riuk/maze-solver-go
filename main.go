@@ -6,9 +6,11 @@ import (
 	"image/color"
 	"maze-solver/io/reader"
 	"maze-solver/io/writer"
+	"maze-solver/maze"
 	"maze-solver/maze/parser"
 	"maze-solver/solver"
 	"maze-solver/utils"
+	"maze-solver/visualizer"
 	"os"
 	"strings"
 
@@ -17,7 +19,7 @@ import (
 )
 
 func main() {
-	readerFactory, writerFactory, solverFactory, ok := parse_arguments()
+	readerFactory, writerFactory, solverFactory, visualize, ok := parse_arguments()
 
 	if !ok {
 		return
@@ -26,19 +28,33 @@ func main() {
 	defer utils.Timer("TOTAL", 1)()
 	reader := readerFactory.Get()
 
-	maze, err := parser.Parse(reader)
+	m, err := parser.Parse(reader)
 	utils.Check(err, "Couldn't read maze")
 
-	solver := solverFactory.Get()
-	solved := solver.Solve(maze)
+	var solved_chan chan *maze.SolvedMaze = nil
+	if visualize {
+		solved_chan = make(chan *maze.SolvedMaze)
+		visualizer.Init(m)
+	}
 
+	solver := solverFactory.Get(solved_chan)
+	var solved *maze.SolvedMaze
+	if visualize {
+		go visualizer.Visualize(solved_chan)
+		go func() {
+			solved = solver.Solve(m)
+		}()
+		visualizer.Run()
+	} else {
+		solved = solver.Solve(m)
+	}
 	writer := writerFactory.Get(solved)
 
 	err = writer.Write()
 	utils.Check(err, "Couldn't write solved maze")
 }
 
-func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.SolverFactory, bool) {
+func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.SolverFactory, bool, bool) {
 	argparser := argparse.NewParser("maze-solver", "Solves the given maze (insane, right? who would've guessed?)")
 
 	var verboseLevel *int = argparser.FlagCounter("v", "verbose", &argparse.Options{
@@ -47,6 +63,11 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
         1: print the total time taken by the solver (time of the main() function)
         2: prints the time the solving algorithm took to run
         3: prints the time taken by each section (reader, solving algorithm, writer)`,
+	})
+
+	visualize := argparser.Flag("", "visualize", &argparse.Options{
+		Help:    "Visualize the progress of the solver",
+		Default: false,
 	})
 
 	readerFactory := reader.ReaderFactory{}
@@ -146,7 +167,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 
 	if err := argparser.Parse(os.Args); err != nil {
 		fmt.Println(argparser.Usage(err))
-		return nil, nil, nil, false
+		return nil, nil, nil, false, false
 	}
 	utils.VERBOSE_LEVEL = *verboseLevel
 
@@ -159,5 +180,5 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	writerFactory.PathColor = color.RGBA{255, 255, 255, 255}
 	writerFactory.SolutionGradient = colorgrad.Warm()
 
-	return &readerFactory, &writerFactory, &solverFactory, true
+	return &readerFactory, &writerFactory, &solverFactory, *visualize, true
 }
