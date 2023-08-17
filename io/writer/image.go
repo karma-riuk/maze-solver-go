@@ -28,6 +28,18 @@ func (w *ImageWriter) Write() error {
 		return errors.New("Filename of ImageWriter doesn't have .png extension. The only suppported image type is png")
 	}
 
+	w.GenerateImage()
+
+	f, err := os.Create(w.Filename)
+	if err != nil {
+		return err
+	}
+	png.Encode(f, w.img)
+	f.Close()
+	return nil
+}
+
+func (w *ImageWriter) GenerateImage() *image.RGBA {
 	w.img = image.NewRGBA(image.Rect(0, 0, w.Maze.Width*w.CellWidth, w.Maze.Height*w.CellHeight))
 
 	// Fill the image with walls
@@ -49,6 +61,9 @@ func (w *ImageWriter) Write() error {
 			height = (node.Down.Coords.Y - node.Coords.Y + 1) * w.CellHeight
 			w.draw(x0, y0, width, height, w.PathColor)
 		}
+	}
+	if len(w.Maze.Solution) == 0 {
+		return w.img
 	}
 
 	// Fill in the solution
@@ -99,14 +114,7 @@ func (w *ImageWriter) Write() error {
 			w.draw(x0, y0, width, height, colors[c])
 		}
 	}
-
-	f, err := os.Create(w.Filename)
-	if err != nil {
-		return err
-	}
-	png.Encode(f, w.img)
-	f.Close()
-	return nil
+	return w.img
 }
 
 func (w *ImageWriter) getSolutionLength() int {
