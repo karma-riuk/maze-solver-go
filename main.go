@@ -13,13 +13,14 @@ import (
 	"maze-solver/visualizer"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/akamensky/argparse"
 	"github.com/mazznoer/colorgrad"
 )
 
 func main() {
-	readerFactory, writerFactory, solverFactory, visualize, ok := parse_arguments()
+	readerFactory, writerFactory, solverFactory, visFactory, ok := parse_arguments()
 
 	if !ok {
 		return
@@ -31,22 +32,38 @@ func main() {
 	m, err := parser.Parse(reader)
 	utils.Check(err, "Couldn't read maze")
 
-	var solved_chan chan *maze.SolvedMaze = nil
-	if visualize {
-		solved_chan = make(chan *maze.SolvedMaze)
-		visualizer.Init(m)
-	}
-
-	solver := solverFactory.Get(solved_chan)
 	var solved *maze.SolvedMaze
-	if visualize {
-		go visualizer.Visualize(solved_chan)
+	if *visFactory.Type != "" {
+		solved_chan := make(chan *maze.SolvedMaze, 3)
+		solver := solverFactory.Get(solved_chan)
+		vis := visFactory.Get()
+
+		vis.Init(m)
+
+		var wg sync.WaitGroup
+		wg.Add(2)
+
+		lets_go := make(chan bool, 1)
+
 		go func() {
-			solved = solver.Solve(m)
+			if <-lets_go {
+				solved = solver.Solve(m)
+			}
+			close(solved_chan)
+			wg.Done()
 		}()
-		visualizer.Run()
+		go func() {
+			vis.Visualize(solved_chan)
+			wg.Done()
+		}()
+		vis.Run(lets_go)
+		wg.Wait()
 	} else {
+		solver := solverFactory.Get(nil)
 		solved = solver.Solve(m)
+	}
+	if solved == nil { // cuz maybe with the window visualization, the user pressed "no"
+		return
 	}
 	writer := writerFactory.Get(solved)
 
@@ -54,7 +71,7 @@ func main() {
 	utils.Check(err, "Couldn't write solved maze")
 }
 
-func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.SolverFactory, bool, bool) {
+func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.SolverFactory, *visualizer.VisualizerFactory, bool) {
 	argparser := argparse.NewParser("maze-solver", "Solves the given maze (insane, right? who would've guessed?)")
 
 	var verboseLevel *int = argparser.FlagCounter("v", "verbose", &argparse.Options{
@@ -65,14 +82,10 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
         3: prints the time taken by each section (reader, solving algorithm, writer)`,
 	})
 
-	visualize := argparser.Flag("", "visualize", &argparse.Options{
-		Help:    "Visualize the progress of the solver",
-		Default: false,
-	})
-
 	readerFactory := reader.ReaderFactory{}
 	writerFactory := writer.WriterFactory{}
 	solverFactory := solver.SolverFactory{}
+	visFactory := visualizer.VisualizerFactory{}
 
 	readerFactory.Type = reader.TYPES[".png"]
 	readerFactory.Filename = argparser.String("i", "input", &argparse.Options{
@@ -165,9 +178,24 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 		Default: solver.TYPES[0],
 	})
 
+	visFactory.Type = argparser.Selector("", "visualize", visualizer.VIZ_METHODS, &argparse.Options{
+		Help:    fmt.Sprintf("Visualizer the progress of the solver, avaiable options: %s. Window will give a live feed of the solver, whereas video creates a video --output with mp4 extension", strings.Join(visualizer.VIZ_METHODS, ", ")),
+		Default: "",
+	})
+
+	visFactory.Filename = argparser.String("", "video-name", &argparse.Options{
+		Help:    "Name of the output file if --visualize is set to 'video'",
+		Default: "maze_sol.mp4",
+	})
+
+	visFactory.Framerate = argparser.Float("", "video-framerate", &argparse.Options{
+		Help:    "Framerate of the video if --visualize is set to 'video'",
+		Default: 60.,
+	})
+
 	if err := argparser.Parse(os.Args); err != nil {
 		fmt.Println(argparser.Usage(err))
-		return nil, nil, nil, false, false
+		return nil, nil, nil, nil, false
 	}
 	utils.VERBOSE_LEVEL = *verboseLevel
 
@@ -180,5 +208,5 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	writerFactory.PathColor = color.RGBA{255, 255, 255, 255}
 	writerFactory.SolutionGradient = colorgrad.Warm()
 
-	return &readerFactory, &writerFactory, &solverFactory, *visualize, true
+	return &readerFactory, &writerFactory, &solverFactory, &visFactory, true
 }
