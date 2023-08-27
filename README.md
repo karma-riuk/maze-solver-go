@@ -42,8 +42,8 @@ it with the following arguments
 | ----- | ----------------- | ---------- | ---------------------------------------------------------------------------------------- |
 | -h    | --help            |            | Print help information                                                                   |
 | -v    | --verbose         | 0          | Verbose level of the solver see [verbose levels](#verbose-levels)                        |
-| -i    | --input           | `maze.png` | Input file                                                                               |
-| -o    | --output          | `sol.png`  | Output file                                                                              |
+| -i    | --input           | `maze.png` | Input file, can be a `.txt` or `.png` file                                               |
+| -o    | --output          | `sol.png`  | Output file, can be a `.txt` or `.png` file                                              |
 |       | --path-char-in    | `' '`      | Character to represent the path in an input text file.                                   |
 |       | --wall-char-in    | `'#'`      | Character to represent the wall in an input text file.                                   |
 |       | --path-char-out   | `' '`      | Character to represent the path in an output text file.                                  |
