@@ -85,5 +85,5 @@ it with the following arguments
 | BFS                                        | DFS                                   |
 | ------------------------------------------ | ------------------------------------- |
 | ![bfs](./assets/videos/bfs.gif)            | ![dfs](./assets/videos/dfs.gif)       |
-| <th>**Dijkstra**</th>                      | <th>**A\***</th>                      |
+| <th>**Dijkstra**</th> <th>**A\***</th>     |
 | ![disjkstra](./assets/videos/dijkstra.gif) | ![a-star](./assets/videos/a-star.gif) |
