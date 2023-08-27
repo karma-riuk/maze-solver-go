@@ -38,22 +38,22 @@ After downloading `maze-solver` from the
 [assets of the latest release](releases/latest "Latest release"), you can use
 it with the following arguments
 
-| Short | Long              | Default    | Description                                                                              |
-| ----- | ----------------- | ---------- | ---------------------------------------------------------------------------------------- |
-| -h    | --help            |            | Print help information                                                                   |
-| -v    | --verbose         | 0          | Verbose level of the solver see [verbose levels](#verbose-levels)                        |
-| -i    | --input           | `maze.png` | Input file, can be a `.txt` or `.png` file                                               |
-| -o    | --output          | `sol.png`  | Output file, can be a `.txt` or `.png` file                                              |
-|       | --path-char-in    | `' '`      | Character to represent the path in an input text file.                                   |
-|       | --wall-char-in    | `'#'`      | Character to represent the wall in an input text file.                                   |
-|       | --path-char-out   | `' '`      | Character to represent the path in an output text file.                                  |
-|       | --wall-char-out   | `'#'`      | Character to represent the wall in an output text file.                                  |
-|       | --cell-size-in    | 3          | Size of a cell (in pixels) for input file of image type.                                 |
-|       | --cell-size-out   | 3          | Size of a cell (in pixels) for output file of image type.                                |
-| -a    | --algo            | a-star     | Algorithm to solve the maze see [solving algorithms](#solving-algorithms)                |
-|       | --visualize       |            | Visualizer the progress of the solver see [visualization methods](#visulazation-methods) |
-|       | --video-name      | `sol.mp4`  | Name of the output file if --visualize is set to 'video'.                                |
-|       | --video-framerate | 60         | Framerate of the video if --visualize is set to 'video'.                                 |
+| Short | Long              | Default    | Description                                                                               |
+| ----- | ----------------- | ---------- | ----------------------------------------------------------------------------------------- |
+| -h    | --help            |            | Print help information                                                                    |
+| -v    | --verbose         | 0          | Verbose level of the solver, see [verbose levels](#verbose-levels)                        |
+| -i    | --input           | `maze.png` | Input file, can be a `.txt` or `.png` file                                                |
+| -o    | --output          | `sol.png`  | Output file, can be a `.txt` or `.png` file                                               |
+|       | --path-char-in    | `' '`      | Character to represent the path in an input text file.                                    |
+|       | --wall-char-in    | `'#'`      | Character to represent the wall in an input text file.                                    |
+|       | --path-char-out   | `' '`      | Character to represent the path in an output text file.                                   |
+|       | --wall-char-out   | `'#'`      | Character to represent the wall in an output text file.                                   |
+|       | --cell-size-in    | 3          | Size of a cell (in pixels) for input file of image type.                                  |
+|       | --cell-size-out   | 3          | Size of a cell (in pixels) for output file of image type.                                 |
+| -a    | --algo            | a-star     | Algorithm to solve the maze, see [solving algorithms](#solving-algorithms)                |
+|       | --visualize       |            | Visualizer the progress of the solver, see [visualization methods](#visulazation-methods) |
+|       | --video-name      | `sol.mp4`  | Name of the output file if --visualize is set to 'video'.                                 |
+|       | --video-framerate | 60         | Framerate of the video if --visualize is set to 'video'.                                  |
 
 ### Verbose levels
 
@@ -80,4 +80,6 @@ it with the following arguments
 | dijkstra | [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm "Wikipedia: Dijkstra's algorithm") |
 | a-star   | [A\*](https://en.wikipedia.org/wiki/A*_search_algorithm "Wikipedia: A* search algorithm")                      |
 
-<!-- ## Examples -->
+## Examples
+
+![bfs](./assets/videos/bfs.gif)
