@@ -106,7 +106,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	writerFactory.Type = writer.TYPES[".png"]
 	writerFactory.Filename = argparser.String("o", "output", &argparse.Options{
 		Help:    "Output file",
-		Default: "maze_sol.png",
+		Default: "sol.png",
 		Validate: func(args []string) error {
 			var ok bool
 			extension := args[0][len(args[0])-4:]
@@ -185,7 +185,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 
 	visFactory.Filename = argparser.String("", "video-name", &argparse.Options{
 		Help:    "Name of the output file if --visualize is set to 'video'",
-		Default: "maze_sol.mp4",
+		Default: "sol.mp4",
 	})
 
 	visFactory.Framerate = argparser.Float("", "video-framerate", &argparse.Options{
