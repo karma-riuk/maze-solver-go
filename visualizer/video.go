@@ -25,7 +25,6 @@ func (v *VideoVisualizer) Init(*maze.Maze) {
 		panic(err)
 	}
 	v.ffmpeg_cmd = path
-	println(path)
 }
 func (v *VideoVisualizer) Run(lets_go chan<- bool) { lets_go <- true }
 
@@ -44,8 +43,8 @@ func (v *VideoVisualizer) Visualize(solved_chan <-chan *maze.SolvedMaze) {
 			img_writer := writer.ImageWriter{
 				Filename:         path.Join(tmp_dir, fmt.Sprintf("%07v.png", i)),
 				Maze:             solved,
-				CellWidth:        2,
-				CellHeight:       2,
+				CellWidth:        5,
+				CellHeight:       5,
 				WallColor:        color.Black,
 				PathColor:        color.White,
 				SolutionGradient: colorgrad.Warm(),
@@ -61,7 +60,7 @@ func (v *VideoVisualizer) Visualize(solved_chan <-chan *maze.SolvedMaze) {
 		"-y",
 		"-pattern_type", "glob",
 		"-i", path.Join(tmp_dir, "*.png"),
-		"-framerate", fmt.Sprint(v.Framerate),
+		"-r", fmt.Sprint(int(v.Framerate)),
 		v.Filename,
 	)
 	err = cmd.Run()
