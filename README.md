@@ -82,8 +82,8 @@ it with the following arguments
 
 ## Examples
 
-| BFS                                                  | DFS                                             |
-| ---------------------------------------------------- | ----------------------------------------------- |
-| ![bfs](./assets/videos/bfs.gif)                      | ![dfs](./assets/videos/dfs.gif)                 |
-| <span style="text-align: center">**Dijkstra**</span> | <span style="text-align: center">**A\***</span> |
-| ![disjkstra](./assets/videos/dijkstra.gif)           | ![a-star](./assets/videos/a-star.gif)           |
+|                    BFS                     |                  DFS                  |
+| :----------------------------------------: | :-----------------------------------: |
+|      ![bfs](./assets/videos/bfs.gif)       |    ![dfs](./assets/videos/dfs.gif)    |
+| ![disjkstra](./assets/videos/dijkstra.gif) | ![a-star](./assets/videos/a-star.gif) |
+|                **Dijkstra**                |                **A\***                |
