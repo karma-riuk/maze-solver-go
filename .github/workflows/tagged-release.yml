@@ -23,7 +23,9 @@ jobs:
         run: sudo apt install libxcursor-dev libxinerama-dev libxrandr-dev libxi-dev libgl-dev libxxf86vm-dev
 
       - name: Build
-        run: go build -v ./...
+        run: |
+          go build -v ./...
+          go build maze-solver
 
       - name: Test
         run: go test -v ./...
