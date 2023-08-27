@@ -85,6 +85,6 @@ it with the following arguments
 | BFS                                         | DFS                                   |
 | ------------------------------------------- | ------------------------------------- |
 | ![bfs](./assets/videos/bfs.gif)             | ![dfs](./assets/videos/dfs.gif)       |
-| ![disjkstra](./assets/videos/disjkstra.gif) | ![a-star](./assets/videos/a-star.gif) |
 | Dijkstra                                    | A\*                                   |
 | ------------------------------------------- | ------------------------------------- |
+| ![disjkstra](./assets/videos/disjkstra.gif) | ![a-star](./assets/videos/a-star.gif) |
