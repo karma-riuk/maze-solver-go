@@ -105,7 +105,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 
 	writerFactory.Type = writer.TYPES[".png"]
 	writerFactory.Filename = argparser.String("o", "output", &argparse.Options{
-		Help:    "Input file",
+		Help:    "Output file",
 		Default: "maze_sol.png",
 		Validate: func(args []string) error {
 			var ok bool
@@ -120,7 +120,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	})
 
 	readerFactory.PathChar = argparser.String("", "path-char-in", &argparse.Options{
-		Help:    "Character to represent the path in a input text file",
+		Help:    "Character to represent the path in an input text file",
 		Default: " ",
 		Validate: func(args []string) error {
 			if len(args[0]) > 1 {
@@ -131,7 +131,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	})
 
 	readerFactory.WallChar = argparser.String("", "wall-char-in", &argparse.Options{
-		Help:    "Character to represent the wall in a input text file",
+		Help:    "Character to represent the wall in an input text file",
 		Default: "#",
 		Validate: func(args []string) error {
 			if len(args[0]) > 1 {
@@ -142,7 +142,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	})
 
 	writerFactory.PathChar = argparser.String("", "path-char-out", &argparse.Options{
-		Help:    "Character to represent the path in a output text file",
+		Help:    "Character to represent the path in an output text file",
 		Default: " ",
 		Validate: func(args []string) error {
 			if len(args[0]) > 1 {
@@ -153,7 +153,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	})
 
 	writerFactory.WallChar = argparser.String("", "wall-char-out", &argparse.Options{
-		Help:    "Character to represent the wall in a output text file",
+		Help:    "Character to represent the wall in an output text file",
 		Default: "#",
 		Validate: func(args []string) error {
 			if len(args[0]) > 1 {
@@ -174,12 +174,12 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	})
 
 	solverFactory.Type = argparser.Selector("a", "algo", solver.TYPES, &argparse.Options{
-		Help:    fmt.Sprintf("Algorithm to solve the maze, avaiable options: %s", strings.Join(solver.TYPES, ", ")),
+		Help:    fmt.Sprintf("Algorithm to solve the maze, available options: %s", strings.Join(solver.TYPES, ", ")),
 		Default: solver.TYPES[0],
 	})
 
 	visFactory.Type = argparser.Selector("", "visualize", visualizer.VIZ_METHODS, &argparse.Options{
-		Help:    fmt.Sprintf("Visualizer the progress of the solver, avaiable options: %s. Window will give a live feed of the solver, whereas video creates a video --output with mp4 extension", strings.Join(visualizer.VIZ_METHODS, ", ")),
+		Help:    fmt.Sprintf("Visualizer the progress of the solver, available options: %s. Window will give a live feed of the solver, whereas video creates a video --output with mp4 extension", strings.Join(visualizer.VIZ_METHODS, ", ")),
 		Default: "",
 	})
 

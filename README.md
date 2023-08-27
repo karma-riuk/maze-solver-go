@@ -38,22 +38,22 @@ After downloading `maze-solver` from the
 [assets of the latest release](releases/latest "Latest release"), you can use
 it with the following arguments
 
-| Short | Long              | Default          | Description                                                                                                                                                                    |
-| ----- | ----------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| -h    | --help            |                  | Print help information                                                                                                                                                         |
-| -v    | --verbose         | 0                | Verbose level of the solver                                                                                                                                                    |
-| -i    | --input           | `maze.png`       | Input file. Default: maze.png                                                                                                                                                  |
-| -o    | --output          | `maze_sol.png`   | Input file. Default: maze_sol.png                                                                                                                                              |
-|       | --path-char-in    | `' '`            | Character to represent the path in a input text file.                                                                                                                          |
-|       | --wall-char-in    | `'#'`            | Character to represent the wall in a input text file.                                                                                                                          |
-|       | --path-char-out   | `' '`            | Character to represent the path in a output text file.                                                                                                                         |
-|       | --wall-char-out   | `'#'`            | Character to represent the wall in a output text file.                                                                                                                         |
-|       | --cell-size-in    | 3                | Size of a cell (in pixels) for input file of image type.                                                                                                                       |
-|       | --cell-size-out   | 3                | Size of a cell (in pixels) for output file of image type.                                                                                                                      |
-| -a    | --algo            | a-star           | Algorithm to solve the maze, avaiable options: dfs, bfs, dijkstra, a-star.                                                                                                     |
-|       | --visualize       |                  | Visualizer the progress of the solver, avaiable options: video, window. Window will give a live feed of the solver, whereas video creates a video --output with mp4 extension. |
-|       | --video-name      | `'maze_sol.mp4'` | Name of the output file if --visualize is set to 'video'.                                                                                                                      |
-|       | --video-framerate | 60               | Framerate of the video if --visualize is set to 'video'.                                                                                                                       |
+| Short | Long              | Default          | Description                                                                                                                                                                         |
+| ----- | ----------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -h    | --help            |                  | Print help information                                                                                                                                                              |
+| -v    | --verbose         | 0                | Verbose level of the solver                                                                                                                                                         |
+| -i    | --input           | `maze.png`       | Input file                                                                                                                                                                          |
+| -o    | --output          | `maze_sol.png`   | Output file                                                                                                                                                                         |
+|       | --path-char-in    | `' '`            | Character to represent the path in an input text file.                                                                                                                              |
+|       | --wall-char-in    | `'#'`            | Character to represent the wall in an input text file.                                                                                                                              |
+|       | --path-char-out   | `' '`            | Character to represent the path in an output text file.                                                                                                                             |
+|       | --wall-char-out   | `'#'`            | Character to represent the wall in an output text file.                                                                                                                             |
+|       | --cell-size-in    | 3                | Size of a cell (in pixels) for input file of image type.                                                                                                                            |
+|       | --cell-size-out   | 3                | Size of a cell (in pixels) for output file of image type.                                                                                                                           |
+| -a    | --algo            | a-star           | Algorithm to solve the maze, available options: dfs, bfs, dijkstra, a-star.                                                                                                         |
+|       | --visualize       |                  | Visualizer the progress of the solver, available options: video, window.<br> Window will give a live feed of the solver, whereas video creates a video --output with mp4 extension. |
+|       | --video-name      | `'maze_sol.mp4'` | Name of the output file if --visualize is set to 'video'.                                                                                                                           |
+|       | --video-framerate | 60               | Framerate of the video if --visualize is set to 'video'.                                                                                                                            |
 
 For the verbose level of the solver
 
