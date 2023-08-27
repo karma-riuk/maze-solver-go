@@ -179,7 +179,7 @@ func parse_arguments() (*reader.ReaderFactory, *writer.WriterFactory, *solver.So
 	})
 
 	visFactory.Type = argparser.Selector("", "visualize", visualizer.VIZ_METHODS, &argparse.Options{
-		Help:    fmt.Sprintf("Visualizer the progress of the solver, available options: %s. Window will give a live feed of the solver, whereas video creates a video --output with mp4 extension", strings.Join(visualizer.VIZ_METHODS, ", ")),
+		Help:    fmt.Sprintf("Visualizer the progress of the solver, available options: %s. Window will give a live feed of the solver, whereas video creates a video creates a video where each frame is a step the solving algorithm takes", strings.Join(visualizer.VIZ_METHODS, ", ")),
 		Default: "",
 	})
 
