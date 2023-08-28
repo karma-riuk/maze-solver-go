@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"sync"
 
 	"github.com/mazznoer/colorgrad"
 )
@@ -35,26 +34,20 @@ func (v *VideoVisualizer) Visualize(solved_chan <-chan *maze.SolvedMaze) {
 	if err != nil {
 		panic(err)
 	}
-	var wg sync.WaitGroup
 	i := 0
 	for solved := range solved_chan {
-		wg.Add(1)
-		go func() {
-			img_writer := writer.ImageWriter{
-				Filename:         path.Join(tmp_dir, fmt.Sprintf("%07v.png", i)),
-				Maze:             solved,
-				CellWidth:        5,
-				CellHeight:       5,
-				WallColor:        color.Black,
-				PathColor:        color.White,
-				SolutionGradient: colorgrad.Warm(),
-			}
-			img_writer.Write()
-			wg.Done()
-		}()
+		img_writer := writer.ImageWriter{
+			Filename:         path.Join(tmp_dir, fmt.Sprintf("%07v.png", i)),
+			Maze:             solved,
+			CellWidth:        5,
+			CellHeight:       5,
+			WallColor:        color.Black,
+			PathColor:        color.White,
+			SolutionGradient: colorgrad.Warm(),
+		}
+		img_writer.Write()
 		i++
 	}
-	wg.Wait()
 	cmd := exec.Command(
 		v.ffmpeg_cmd,
 		"-y",
