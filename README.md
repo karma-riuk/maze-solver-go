@@ -29,8 +29,8 @@ couple of hours (which I was honestly not expecting).
 
 ## Dependencies
 
-- `go >= 1.21`
-- `ffmpeg` (optional, for video visualization, see [visualization methods](#visulazation-methods)
+- `go` >= 1.21
+- `ffmpeg` (optional, for video visualization, see [visualization methods](#visulazation-methods))
 
 ## Usage
 
