@@ -1,6 +1,7 @@
 package solver
 
 import (
+	"math/rand"
 	"maze-solver/maze"
 	"maze-solver/utils"
 )
@@ -28,23 +29,26 @@ func (s *DFSSolver) Solve(m *maze.Maze) *maze.SolvedMaze {
 
 		left_visited, right_visited, up_visited, down_visited := visited(current.Left), visited(current.Right), visited(current.Up), visited(current.Down)
 
-		if left_visited && right_visited && up_visited && down_visited {
+		if !left_visited || !right_visited || !up_visited || !down_visited {
+
+			candidates := make([]*maze.Node, 0, 4)
+			if !left_visited {
+				candidates = append(candidates, current.Left)
+			} else if !down_visited {
+				candidates = append(candidates, current.Down)
+			} else if !right_visited {
+				candidates = append(candidates, current.Right)
+			} else if !up_visited {
+				candidates = append(candidates, current.Up)
+			}
+
+			current = candidates[rand.Intn(len(candidates))]
+
+			stack = append(stack, current)
+		} else {
 			// dead end or no more visited nodes
 			stack = stack[:len(stack)-1]
 			current = stack[len(stack)-1]
-		} else {
-
-			if !left_visited {
-				current = current.Left
-			} else if !down_visited {
-				current = current.Down
-			} else if !right_visited {
-				current = current.Right
-			} else if !up_visited {
-				current = current.Up
-			}
-
-			stack = append(stack, current)
 		}
 	}
 
